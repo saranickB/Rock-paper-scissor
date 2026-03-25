@@ -1,9 +1,16 @@
-//declaring constant for each choice
 const ROCK = "rock";
 const PAPER = "paper";
-const SCISSORS = "scissors"
+const SCISSORS = "scissors";
 
-// to generate random choice between rock, paper and scissor by Computer
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+const result = document.querySelector("#result");
+const final = document.querySelector("#final");
+
+let humanScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
     let result = "";
     if (Math.random() < 0.3) { result = ROCK; }
@@ -14,54 +21,46 @@ function getComputerChoice() {
     return result;
 }
 
-//getComputerChoice();
+function playRound(event) {
+    if (humanScore == 5 || computerScore == 5){
+        rock.setAttribute("disabled", true)
+        scissors.setAttribute("disabled", true)
+        paper.setAttribute("disabled", true)
+        return;
+    }
+    const humanChoice = event.target.id;
+    const computerChoice = getComputerChoice().toLowerCase();
+    let win = true;
+    if ((humanChoice == ROCK && computerChoice == PAPER) ||
+        (humanChoice == PAPER && computerChoice == SCISSORS) ||
+        (humanChoice == SCISSORS && computerChoice == ROCK)) {
+        win = false;
+    }
+    else if (humanChoice == computerChoice) {
+        win = null;
+    }
+    if (win == true) {
+        humanScore += 1;
+        result.textContent = `You win! ${humanChoice} beats ${computerChoice}, 
+        your score is ${humanScore} and computer score is ${computerScore}`;
+    }
+    else if (win == false) {
+        computerScore += 1;
+        result.textContent = `You lose ${computerChoice} beats ${humanChoice},
+         your score is ${humanScore} and computer score is ${computerScore}`;
+    }
+    else { result.textContent = `Both choose same, try again, 
+        score board is you: ${humanScore} and computer: ${computerScore}`}
 
-//to generate choice based on human entered prompt message
-function getHumanChoice() {
-    let choice = window.prompt("Choose Rock or paper or scissors");
-    return choice;
+    if (humanScore == 5) {
+        final.textContent = `Winner is Human with score ${humanScore}`;
+    }
+    else if (computerScore == 5){
+        final.textContent = `Winner is Computer  with score ${computerScore}`;
+    }
+        
 }
 
-//getHumanChoice(Number(choice))
-
-//play game for 5 rounds
-function playGame() {
-    //tracking human score and computer score
-    let humanScore = 0;
-    let computerScore = 0;
-
-    //logic for playing single round
-    function playRound(humanChoice, computerChoice) {
-        humanChoice = humanChoice.toLowerCase();
-        computerChoice = getComputerChoice().toLowerCase();
-        let win = true;
-        if ((humanChoice == ROCK && computerChoice == PAPER) ||
-            (humanChoice == PAPER && computerChoice == SCISSORS) ||
-            (humanChoice == SCISSORS && computerChoice == ROCK)) {
-            win = false;
-        }
-        else if (humanChoice == computerChoice) {
-            win = null;
-        }
-        if (win == true) {
-            humanScore += 1;
-            console.log(`"You win! ${humanChoice} beats ${computerChoice}"`);
-        }
-        else if (win == false) {
-            computerScore += 1;
-            console.log(`"You lose ${computerChoice} beats ${humanChoice}"`)
-        }
-        else {console.log("Both choose same, try again")}
-    }
-
-    for (let i =1;i<=5;i++){
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        playRound(humanChoice, computerChoice);   
-    }
-
-    if (humanScore > computerScore) {console.log("You win!!")}
-    else if (humanScore == computerScore){console.log("Game tied!!")}
-    else {console.log("You lose!!")}    
-}
-playGame();
+rock.addEventListener('click', playRound);
+paper.addEventListener('click', playRound);
+scissors.addEventListener('click', playRound);
